@@ -37,9 +37,20 @@ jobs:
           cache: 'npm'
       - name: Install NPM dependencies
         run: npm install
-      - name: Install Playwright brousers
+      - name: Install Playwright browsers
         run: npx playwright install
       - name: Start the application
         run: npm run start &
       - name: Execute UI tests
         run: npm run test:ui
+
+  deploy:
+    needs: execute-test-UI
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: JorgeLNJunior/render-deploy@v1.4.4
+        with:
+          service_id: ${{ secrets.RENDER_SERVICE_ID }}
+          api_key: ${{ secrets.RENDER_API_KEY }}
+          wait_deploy: true
